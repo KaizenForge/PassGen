@@ -1,0 +1,32 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Password Generator";
+}
+
+<h1>Password Generator</h1>
+
+<form method="post">
+    <div>
+        <label>Password Length:</label>
+        <input type="number" name="Length" value="12" min="4" max="32" />
+    </div>
+    <div>
+        <input type="checkbox" name="IncludeLetters" checked />
+        <label>Include Letters</label>
+    </div>
+    <div>
+        <input type="checkbox" name="IncludeDigits" checked />
+        <label>Include Digits</label>
+    </div>
+    <div>
+        <input type="checkbox" name="IncludeSpecial" checked />
+        <label>Include Special Characters</label>
+    </div>
+    <button type="submit">Generate Password</button>
+</form>
+
+@if(Model.GeneratedPassword != null)
+{
+    <h2>Your Password: @Model.GeneratedPassword</h2>
+}
