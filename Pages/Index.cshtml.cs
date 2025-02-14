@@ -6,7 +6,7 @@ using System.Text;
 public class IndexModel : PageModel
 {
     [BindProperty]
-    public int Length { get; set; } = 12;
+    public int Length { get; set; } = 16;
 
     [BindProperty]
     public bool IncludeLetters { get; set; } = true;
@@ -17,12 +17,12 @@ public class IndexModel : PageModel
     [BindProperty]
     public bool IncludeSpecial { get; set; } = true;
 
-    // Marking the property as nullable to avoid the CS8618 warning.
+    // Marked as nullable to avoid warnings.
     public string? GeneratedPassword { get; set; }
 
     public void OnGet()
     {
-        // Default values are set via property initializers.
+        // Default values are already set.
     }
 
     public void OnPost()

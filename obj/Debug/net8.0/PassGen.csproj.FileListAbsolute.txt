@@ -28,3 +28,4 @@ C:\Users\Tomek\DevOps\.NET\PassGen\obj\Debug\net8.0\refint\PassGen.dll
 C:\Users\Tomek\DevOps\.NET\PassGen\obj\Debug\net8.0\PassGen.pdb
 C:\Users\Tomek\DevOps\.NET\PassGen\obj\Debug\net8.0\PassGen.genruntimeconfig.cache
 C:\Users\Tomek\DevOps\.NET\PassGen\obj\Debug\net8.0\ref\PassGen.dll
+C:\Users\Tomek\DevOps\.NET\PassGen\obj\Debug\net8.0\PassGen.sourcelink.json

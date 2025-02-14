@@ -4,12 +4,12 @@
     ViewData["Title"] = "Password Generator";
 }
 
-<h1>Password Generator</h1>
+<div class="title-frame">Password Generator</div>
 
 <form method="post">
     <div>
         <label>Password Length:</label>
-        <input type="number" name="Length" value="12" min="4" max="32" />
+        <input type="number" name="Length" value="16" min="4" max="32" class="digit-input" />
     </div>
     <div>
         <input type="checkbox" name="IncludeLetters" checked />
@@ -28,5 +28,7 @@
 
 @if(Model.GeneratedPassword != null)
 {
-    <h2>Your Password: @Model.GeneratedPassword</h2>
+    <div class="result-frame">
+        <strong>Your Password:</strong> <span class="generated-text">@Model.GeneratedPassword</span>
+    </div>
 }
