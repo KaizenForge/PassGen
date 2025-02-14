@@ -4,31 +4,179 @@
     ViewData["Title"] = "Password Generator";
 }
 
-<div class="title-frame">Password Generator</div>
+@section Styles {
+    <style>
+        /* Container for number input with custom buttons */
+        .number-input-container {
+            display: flex;
+            align-items: center;
+        }
+        /* Small decrement and increment buttons */
+        .decrement-button, .increment-button {
+            background-color: #007ACC;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 0 5px;
+        }
+        .decrement-button:hover, .increment-button:hover {
+            background-color: #005F9E;
+        }
+        /* Custom styling for the number input field */
+        .digit-input {
+            text-align: center;
+            width: 60px;
+            font-size: 16px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+    </style>
+}
+
+<!-- Interactive title: clicking it resets the app state (clearing generated passwords) -->
+<div class="title-frame" onclick="resetApp()" style="cursor:pointer;">Password Generator</div>
 
 <form method="post">
-    <div>
-        <label>Password Length:</label>
-        <input type="number" name="Length" value="16" min="4" max="32" class="digit-input" />
+    <div class="fields-row">
+        <div class="field">
+            <label>Password Length:</label>
+            <div class="number-input-container">
+                <button type="button" class="decrement-button" onclick="decrement('lengthInput')">-</button>
+                <input type="number" id="lengthInput" name="Length" value="16" min="4" max="32" class="digit-input" />
+                <button type="button" class="increment-button" onclick="increment('lengthInput')">+</button>
+            </div>
+        </div>
+        <div class="field">
+            <label>Number of Passwords:</label>
+            <div class="number-input-container">
+                <button type="button" class="decrement-button" onclick="decrement('countInput')">-</button>
+                <input type="number" id="countInput" name="Count" value="1" min="1" max="20" class="digit-input" />
+                <button type="button" class="increment-button" onclick="increment('countInput')">+</button>
+            </div>
+        </div>
     </div>
-    <div>
-        <input type="checkbox" name="IncludeLetters" checked />
-        <label>Include Letters</label>
+    <div class="options-row">
+        <div>
+            <input type="checkbox" name="IncludeLetters" checked />
+            <label>Letters</label>
+        </div>
+        <div>
+            <input type="checkbox" name="IncludeDigits" checked />
+            <label>Digits</label>
+        </div>
+        <div>
+            <input type="checkbox" name="IncludeSpecial" checked />
+            <label>Special Characters</label>
+        </div>
     </div>
-    <div>
-        <input type="checkbox" name="IncludeDigits" checked />
-        <label>Include Digits</label>
-    </div>
-    <div>
-        <input type="checkbox" name="IncludeSpecial" checked />
-        <label>Include Special Characters</label>
-    </div>
-    <button type="submit">Generate Password</button>
+    <button type="submit" class="generate-button">Generate Password</button>
 </form>
 
-@if(Model.GeneratedPassword != null)
+@if(Model.GeneratedPasswords != null && Model.GeneratedPasswords.Count > 0)
 {
+    <p class="copy-info" style="text-align: center;">Click on an individual password to copy it.</p>
     <div class="result-frame">
-        <strong>Your Password:</strong> <span class="generated-text">@Model.GeneratedPassword</span>
+        <strong>Your Password(s):</strong>
+        <!-- Copy-all icon positioned in the top right corner -->
+        <span class="copy-all-icon" onclick="copyAllPasswords()" title="Copy all passwords">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.11 0-2 
+                .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm-7-1c.55 
+                0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V5h2v2h10V5h2v15z"/>
+            </svg>
+        </span>
+        <!-- Copy feedback message -->
+        <span class="copy-feedback" id="copyFeedback">Copied!</span>
+        <ul class="password-list">
+            @foreach(var pwd in Model.GeneratedPasswords)
+            {
+                <li class="generated-text" onclick="copyToClipboard(this.innerText)">@pwd</li>
+            }
+        </ul>
     </div>
 }
+
+<script>
+    function resetApp() {
+        // Reload the page without query parameters to reset the app state.
+        window.location.href = window.location.pathname;
+    }
+    
+    function increment(inputId) {
+        var input = document.getElementById(inputId);
+        var currentVal = parseInt(input.value) || 0;
+        var max = parseInt(input.getAttribute('max')) || Infinity;
+        if (currentVal < max) {
+            input.value = currentVal + 1;
+        }
+    }
+    
+    function decrement(inputId) {
+        var input = document.getElementById(inputId);
+        var currentVal = parseInt(input.value) || 0;
+        var min = parseInt(input.getAttribute('min')) || 0;
+        if (currentVal > min) {
+            input.value = currentVal - 1;
+        }
+    }
+    
+    function copyAllPasswords() {
+        var items = document.querySelectorAll('.password-list .generated-text');
+        var allPasswords = Array.from(items).map(item => item.innerText).join('\n');
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(allPasswords).then(function () {
+                showCopyFeedback();
+            }, function (err) {
+                console.error("Failed to copy text: " + err);
+            });
+        } else {
+            var textarea = document.createElement("textarea");
+            textarea.value = allPasswords;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand("copy");
+                showCopyFeedback();
+            } catch (err) {
+                console.error("Failed to copy text: " + err);
+            }
+            document.body.removeChild(textarea);
+        }
+    }
+    
+    function copyToClipboard(text) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(function () {
+                showCopyFeedback();
+            }, function (err) {
+                console.error("Failed to copy text: " + err);
+            });
+        } else {
+            var textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand("copy");
+                showCopyFeedback();
+            } catch (err) {
+                console.error("Failed to copy text: " + err);
+            }
+            document.body.removeChild(textarea);
+        }
+    }
+    
+    function showCopyFeedback() {
+        var feedback = document.getElementById("copyFeedback");
+        feedback.style.opacity = 1;
+        feedback.style.transform = "translateY(0)";
+        setTimeout(function () {
+            feedback.style.opacity = 0;
+            feedback.style.transform = "translateY(-10px)";
+        }, 1500);
+    }
+</script>

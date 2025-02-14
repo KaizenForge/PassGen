@@ -6,19 +6,21 @@
   font-style: normal;
 }
 
+/* Basic body styling */
 body {
   font-family: 'Hack Nerd Font', monospace;
   margin: 0;
   padding: 0;
 }
 
+/* Container styling */
 .container {
   max-width: 600px;
   margin: 50px auto;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.85);
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Title frame styled with green border and rounded corners */
@@ -33,7 +35,7 @@ body {
   border-radius: 8px;
 }
 
-/* Result frame styling with rounded corners */
+/* Result frame styling with rounded corners and relative positioning */
 .result-frame {
   border: 2px solid #007ACC;
   padding: 10px;
@@ -42,6 +44,7 @@ body {
   background-color: rgba(200, 230, 255, 0.8);
   font-size: 24px;
   border-radius: 8px;
+  position: relative; /* For positioning the copy-all icon and feedback */
 }
 
 /* Style for the generated password text only */
@@ -50,7 +53,7 @@ body {
   font-weight: normal; /* Regular font weight */
 }
 
-/* Input styling for the digits field */
+/* Input styling for the number fields */
 input[type="number"].digit-input {
   font-size: 20px;
   padding: 8px;
@@ -59,27 +62,100 @@ input[type="number"].digit-input {
   border: 1px solid #ccc;
 }
 
+/* Fields row: arrange the two number inputs horizontally */
+.fields-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.fields-row .field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fields-row .field label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Options row: arrange checkboxes in one row */
+.options-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+.options-row > div {
+  display: flex;
+  align-items: center;
+}
+
+/* Generic form div margin */
 form div {
   margin-bottom: 15px;
 }
 
+/* Label styling */
 label {
   margin-right: 10px;
   font-weight: bold;
 }
 
+/* Generic button styling */
 button {
   display: block;
   width: 100%;
   padding: 10px;
   font-size: 16px;
-  background-color: #007ACC;
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-button:hover {
+/* Generate button specific styling */
+button.generate-button {
+  background-color: #007ACC;
+  color: white;
+}
+
+button.generate-button:hover {
   background-color: #005F9E;
+}
+
+/* Password list styling */
+.password-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+/* Copy-all icon styling in the top right corner */
+.copy-all-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #007ACC;
+  transition: transform 0.2s;
+}
+
+.copy-all-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Copy feedback message styling with animation */
+.copy-feedback {
+  position: absolute;
+  top: 10px;
+  right: 50px;
+  background-color: #007ACC;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.5s, transform 0.5s;
 }

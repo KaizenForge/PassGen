@@ -1,12 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 public class IndexModel : PageModel
 {
     [BindProperty]
     public int Length { get; set; } = 16;
+
+    [BindProperty]
+    public int Count { get; set; } = 1;
 
     [BindProperty]
     public bool IncludeLetters { get; set; } = true;
@@ -17,19 +21,24 @@ public class IndexModel : PageModel
     [BindProperty]
     public bool IncludeSpecial { get; set; } = true;
 
-    // Marked as nullable to avoid warnings.
-    public string? GeneratedPassword { get; set; }
+    // Changed to a list to support multiple generated passwords.
+    public List<string>? GeneratedPasswords { get; set; }
 
     public void OnGet()
     {
-        // Default values are already set.
     }
 
     public void OnPost()
     {
+        if (Count < 1)
+        {
+            Count = 1;
+        }
+
         string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         string digits = "0123456789";
-        string special = "!@#$%^&*()_-+=<>?";
+        // Updated special characters list: excludes !, @, %, * and ^
+        string special = "#$&()_-+=<>?";
 
         StringBuilder allowedChars = new StringBuilder();
 
@@ -42,18 +51,23 @@ public class IndexModel : PageModel
 
         if (allowedChars.Length == 0)
         {
-            GeneratedPassword = "Please select at least one option.";
+            GeneratedPasswords = new List<string> { "Please select at least one option." };
             return;
         }
 
         Random random = new Random();
-        char[] password = new char[Length];
+        List<string> passwords = new List<string>();
 
-        for (int i = 0; i < Length; i++)
+        for (int j = 0; j < Count; j++)
         {
-            password[i] = allowedChars[random.Next(allowedChars.Length)];
+            char[] password = new char[Length];
+            for (int i = 0; i < Length; i++)
+            {
+                password[i] = allowedChars[random.Next(allowedChars.Length)];
+            }
+            passwords.Add(new string(password));
         }
 
-        GeneratedPassword = new string(password);
+        GeneratedPasswords = passwords;
     }
 }

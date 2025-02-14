@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
 @{
-    // Check for an existing background image in session.
+    // Retrieve or set a random background image URL in session.
     string? backgroundImage = Context.Session.GetString("BackgroundImage");
     if (string.IsNullOrEmpty(backgroundImage))
     {
@@ -22,6 +22,7 @@
             background-size: cover;
         }
     </style>
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <div class="container">
